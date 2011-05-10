@@ -7,7 +7,7 @@ start_link() ->
     gen_server:start_link({local, gen_server_test}, gen_server_test, [], []).
 
 alloc() ->
-    io:format("allocing"),
+    io:format("allocing\n"),
 		gen_server:call(?MODULE, {alloc}).
 
 free(Ch) ->
@@ -17,11 +17,17 @@ init(_Args) ->
     {ok, channels()}.
 
 handle_call({alloc}, _From, LoopData) ->
-    io:format("handle alloc").
-
+    Reply = io:format("handle alloc\n"),
+		io:format("_From"),
+	 	{reply, Reply, LoopData}.
+	
 handle_cast({free, Ch}, LoopData) ->
-    io:format(Ch).
+    io:format("handle cast \n"), 
+		{noreply, Ch}.
 
+terminate(shutdown, State) ->
+    io:format("shutdown\n"),
+		ok.
 free() -> 
 		io:format("free").
 
