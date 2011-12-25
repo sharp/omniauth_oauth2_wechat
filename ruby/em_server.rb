@@ -2,20 +2,23 @@ require 'rubygems'
 require 'benchmark'
 require 'eventmachine'
 class Handler  < EventMachine::Connection
+  def initialize(*args)
+    super
+  end
+  
   def receive_data(data)
 		operation = proc do
 			# simulate a long running request
  			a = []
-			n = 5000
-			for i in 1..n
-				a << rand(n)
+			for i in 1..1000
+				a << rand(1000)
 				a.sort!
 			end
 		end
  
     # Callback block to execute once the request is fulfilled
     callback = proc do |res|
-    	send_data "send_response\n"
+    	send_data "data from server"
     end
 
 		puts data
