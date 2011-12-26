@@ -2,6 +2,7 @@ require 'rubygems'
 require 'benchmark'
 Benchmark.bm do |x|
 	x.report("times:") do
+    10.times.each do
 		a = []
 		n = 10000
 		for i in 1..n
@@ -9,4 +10,6 @@ Benchmark.bm do |x|
 			a.sort!
 		end
 	end
+  end
 end
+
