@@ -1,10 +1,11 @@
 require 'rubygems'
 require 'socket'
 
-server = TCPServer.open(8080)
-loop {
-  client = server.accept
-  sleep(2)
-  client.puts("hi, i am server")
-  client.close
-}
+socket = TCPServer.open(8080)
+loop do
+  sock = socket.accept
+  data = sock.recv(100)
+  puts data.unpack('B*').to_s
+  sock.write("hi, i am server")
+  sock.close
+end
