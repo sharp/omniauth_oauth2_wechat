@@ -3,7 +3,6 @@
 -include_lib("../../jsonerl/src/jsonerl.hrl").
 -record(test, {a, b, c}).
 
-
 encode() ->
     Struct = {struct,[{"a",2},{"b",2},{"c",3}]},
     Json = mochijson2:encode(Struct),
