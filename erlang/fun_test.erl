@@ -1,15 +1,19 @@
 -module(fun_test).
--export([test/0]).
+-export([run/0]).
+-record(frame, {a=1, b, c}).
 -define(D(X), io:format("~p~n", [X])).
 
-test() ->
-    myfun({1,2,3}).
+run() ->
+    fun1({1,2,3}),
+    fun2(#frame{a=2, b=hello, c="world"}).
 
-myfun({_, _, x} = State) ->
+fun2(#frame{a=A, b = B, c =C}) ->
+    ?D({A, B, C}).
+
+fun1({_, _, x} = State) ->
     ?D(x);
-myfun({A} = State) ->
+fun1({A} = State) ->
     ?D(A);
-myfun({1, _, Y} = State) ->
+fun1({1, _, Y} = State) ->
     ?D(Y),
     ?D(State).
-
