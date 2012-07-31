@@ -1,0 +1,9 @@
+{application,sharp_media,
+             [{description,[]},
+              {vsn,"1"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{sharp_media_app,[]}},
+              {env,[]},
+              {modules,[http_handler,sharp_media_app,sharp_media_mq,
+                        sharp_media_sup,welink_media_sup]}]}.

@@ -1,0 +1,50 @@
+= welink_media
+
+welink_media is a RESTful web-based video processor which queues and encodes
+videos according to target profiles that you define.  There is a handy web
+interface for defining encoding tasks, and a restful web service which takes
+encoding commands.
+
+welink_media is written using Erlang/OTP.
+
+== Why would you want one?
+
+If you're not running a server, you probably don't need welink_media, because
+there are already lots of great client-side batch processors for all kinds of
+different operating systems. However, if you are running a web application,
+and you want to process uploaded video, welink_media offers you a convenient
+end-to-end media service.
+
+The right way to deal with the uploaded video is to fire up a new thread which
+can take over responsibility for encoding the video, while your web app goes
+on its merry way.  Unfortunately, this is difficult in some languages (PHP, for
+example, doesn't have lightweight threading support), and even in languages
+with good threading support it still sort of sucks. With welink_media, all you
+need to do to trigger encoding of a video is shoot off an HTTP request, and
+everything else is handled for you.
+
+
+== Using it
+== Encoders and Encoding Tasks
+
+
+== Installation
+
+
+== Note on Patches/Pull Requests
+
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+* Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+* Send me a pull request. Bonus points for topic branches.
+
+== Copyright
+
+Copyright (c) 2012 Sharp. See LICENSE for details.
+
+== Contributors
+
+Sharp
+
