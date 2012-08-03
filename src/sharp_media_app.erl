@@ -25,7 +25,13 @@ start(_StartType, _StartArgs) ->
 			  cowboy_tcp_transport, [{port, 8080}],
 			  cowboy_http_protocol, [{dispatch, Dispatch}]
 			 ),
-    welink_media_sup:start_link().
+    load_config(),
+    sharp_media_sup:start_link().
+
+load_config() ->
+    {ok, Config} = file:cosult("sharp_media.conf"),
+    application:set_env(sharp_media, app_config, Config).
+    
 
 stop(_State) ->
     ok.

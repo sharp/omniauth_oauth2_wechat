@@ -19,7 +19,13 @@
 
 -define(SERVER, ?MODULE). 
 
--record(state, {}).
+-include("../apps/rabbitmq-erlang-client/include/amqp_client.hrl").
+
+-record(state, {
+	  channel,
+	  connection,
+	  exchange = sharp_media_exchange
+	 }).
 
 %%%===================================================================
 %%% API
@@ -31,6 +37,14 @@
 %%
 %% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
 %% @end
+%%--------------------------------------------------------------------
+
+%%====================================================================
+%% API
+%%====================================================================
+%%--------------------------------------------------------------------
+%% Function: start_link() -> {ok,Pid} | ignore | {error,Error}
+%% Description: Starts the server
 %%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
@@ -51,7 +65,20 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    {ok, #state{}}.
+    %{ok, Durable} = sharp_util:get_env(mq_durable_queues),
+    {ok, Params} = sharp_util:get_env(mq_connection_params),
+    AMQPParams = #amqp_params_network{
+      username =  proplists:get_value(username, Params),
+      password =  proplists:get_value(password, Params),
+      host =  proplists:get_value(host, Params),
+      virtual_host =  proplists:get_value(virtual_host, Params),
+      channel_max =  proplists:get_value(channel_max, Params)
+     },
+
+    {ok, Connection} = amqp_connection:start(AMQPParams),
+    {ok, Channel} = amqp_connection:open_channel(Connection),
+
+    {ok, #state{channel=Channel, connection=Connection}}.
 
 %%--------------------------------------------------------------------
 %% @private
