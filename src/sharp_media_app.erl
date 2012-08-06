@@ -13,6 +13,7 @@ start() ->
     start(normal, []).
 
 start(_StartType, _StartArgs) ->
+    application:start(pooly),
     application:start(log4erl),
     log4erl:conf("priv/log4erl.conf"),
     application:start(cowboy),

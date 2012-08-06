@@ -5,5 +5,6 @@
               {applications,[kernel,stdlib]},
               {mod,{sharp_media_app,[]}},
               {env,[]},
-              {modules,[http_handler,sharp_media_app,sharp_media_mq,
-                        sharp_media_sup,sharp_util,welink_media_sup]}]}.
+              {modules,[http_handler,sharp_hds,sharp_hls,sharp_media_app,
+                        sharp_media_engine,sharp_media_mq,sharp_media_sup,
+                        sharp_util,welink_media_sup]}]}.

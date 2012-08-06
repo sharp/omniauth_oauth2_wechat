@@ -31,5 +31,5 @@ start_link() ->
 
 init([]) ->
     MQ = ?CHILD(sharp_media_mq, worker),
-    {ok, { {one_for_one, 5, 10}, [MQ]} }.
-
+    ENGINE = ?CHILD(sharp_media_engine, worker),
+    {ok, { {one_for_one, 5, 10}, [MQ, ENGINE]} }.
