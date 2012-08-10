@@ -4,20 +4,20 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created :  6 Aug 2012 by sharp <sharp@sharp-Rev-1-0>
+%%% Created :  7 Aug 2012 by sharp <sharp@sharp-Rev-1-0>
 %%%-------------------------------------------------------------------
 -module(sharp_hls).
 
--behaviour(gen_fsm).
+-behaviour(gen_server).
 
 %% API
--export([start_link/0]).
+-export([start_link/0, start_encode/1]).
 
-%% gen_fsm callbacks
--export([init/1, state_name/2, state_name/3, handle_event/3,
-	 handle_sync_event/4, handle_info/3, terminate/3, code_change/4]).
+%% gen_server callbacks
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2,
+	 terminate/2, code_change/3]).
 
--define(SERVER, ?MODULE).
+-define(SERVER, ?MODULE). 
 
 -record(state, {}).
 
@@ -27,140 +27,91 @@
 
 %%--------------------------------------------------------------------
 %% @doc
-%% Creates a gen_fsm process which calls Module:init/1 to
-%% initialize. To ensure a synchronized start-up procedure, this
-%% function does not return until Module:init/1 has returned.
+%% Starts the server
 %%
 %% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
 %% @end
 %%--------------------------------------------------------------------
+start_encode(Req) ->
+    encode(Req).
+
 start_link() ->
-    gen_fsm:start_link({local, ?SERVER}, ?MODULE, [], []).
+    gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 %%%===================================================================
-%%% gen_fsm callbacks
+%%% gen_server callbacks
 %%%===================================================================
 
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
-%% Whenever a gen_fsm is started using gen_fsm:start/[3,4] or
-%% gen_fsm:start_link/[3,4], this function is called by the new
-%% process to initialize.
+%% Initializes the server
 %%
-%% @spec init(Args) -> {ok, StateName, State} |
-%%                     {ok, StateName, State, Timeout} |
+%% @spec init(Args) -> {ok, State} |
+%%                     {ok, State, Timeout} |
 %%                     ignore |
-%%                     {stop, StopReason}
+%%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    {ok, state_name, #state{}}.
+    {ok, #state{}}.
 
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
-%% There should be one instance of this function for each possible
-%% state name. Whenever a gen_fsm receives an event sent using
-%% gen_fsm:send_event/2, the instance of this function with the same
-%% name as the current state name StateName is called to handle
-%% the event. It is also called if a timeout occurs.
+%% Handling call messages
 %%
-%% @spec state_name(Event, State) ->
-%%                   {next_state, NextStateName, NextState} |
-%%                   {next_state, NextStateName, NextState, Timeout} |
-%%                   {stop, Reason, NewState}
+%% @spec handle_call(Request, From, State) ->
+%%                                   {reply, Reply, State} |
+%%                                   {reply, Reply, State, Timeout} |
+%%                                   {noreply, State} |
+%%                                   {noreply, State, Timeout} |
+%%                                   {stop, Reason, Reply, State} |
+%%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-state_name(_Event, State) ->
-    {next_state, state_name, State}.
-
-%%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% There should be one instance of this function for each possible
-%% state name. Whenever a gen_fsm receives an event sent using
-%% gen_fsm:sync_send_event/[2,3], the instance of this function with
-%% the same name as the current state name StateName is called to
-%% handle the event.
-%%
-%% @spec state_name(Event, From, State) ->
-%%                   {next_state, NextStateName, NextState} |
-%%                   {next_state, NextStateName, NextState, Timeout} |
-%%                   {reply, Reply, NextStateName, NextState} |
-%%                   {reply, Reply, NextStateName, NextState, Timeout} |
-%%                   {stop, Reason, NewState} |
-%%                   {stop, Reason, Reply, NewState}
-%% @end
-%%--------------------------------------------------------------------
-state_name(_Event, _From, State) ->
+handle_call(_Request, _From, State) ->
     Reply = ok,
-    {reply, Reply, state_name, State}.
+    {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
-%% Whenever a gen_fsm receives an event sent using
-%% gen_fsm:send_all_state_event/2, this function is called to handle
-%% the event.
+%% Handling cast messages
 %%
-%% @spec handle_event(Event, StateName, State) ->
-%%                   {next_state, NextStateName, NextState} |
-%%                   {next_state, NextStateName, NextState, Timeout} |
-%%                   {stop, Reason, NewState}
+%% @spec handle_cast(Msg, State) -> {noreply, State} |
+%%                                  {noreply, State, Timeout} |
+%%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_event(_Event, StateName, State) ->
-    {next_state, StateName, State}.
+handle_cast(_Msg, State) ->
+    {noreply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
-%% Whenever a gen_fsm receives an event sent using
-%% gen_fsm:sync_send_all_state_event/[2,3], this function is called
-%% to handle the event.
+%% Handling all non call/cast messages
 %%
-%% @spec handle_sync_event(Event, From, StateName, State) ->
-%%                   {next_state, NextStateName, NextState} |
-%%                   {next_state, NextStateName, NextState, Timeout} |
-%%                   {reply, Reply, NextStateName, NextState} |
-%%                   {reply, Reply, NextStateName, NextState, Timeout} |
-%%                   {stop, Reason, NewState} |
-%%                   {stop, Reason, Reply, NewState}
+%% @spec handle_info(Info, State) -> {noreply, State} |
+%%                                   {noreply, State, Timeout} |
+%%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_sync_event(_Event, _From, StateName, State) ->
-    Reply = ok,
-    {reply, Reply, StateName, State}.
+handle_info(_Info, State) ->
+    {noreply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
-%% This function is called by a gen_fsm when it receives any
-%% message other than a synchronous or asynchronous event
-%% (or a system message).
-%%
-%% @spec handle_info(Info,StateName,State)->
-%%                   {next_state, NextStateName, NextState} |
-%%                   {next_state, NextStateName, NextState, Timeout} |
-%%                   {stop, Reason, NewState}
-%% @end
-%%--------------------------------------------------------------------
-handle_info(_Info, StateName, State) ->
-    {next_state, StateName, State}.
-
-%%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% This function is called by a gen_fsm when it is about to
+%% This function is called by a gen_server when it is about to
 %% terminate. It should be the opposite of Module:init/1 and do any
-%% necessary cleaning up. When it returns, the gen_fsm terminates with
-%% Reason. The return value is ignored.
+%% necessary cleaning up. When it returns, the gen_server terminates
+%% with Reason. The return value is ignored.
 %%
-%% @spec terminate(Reason, StateName, State) -> void()
+%% @spec terminate(Reason, State) -> void()
 %% @end
 %%--------------------------------------------------------------------
-terminate(_Reason, _StateName, _State) ->
+terminate(_Reason, _State) ->
     ok.
 
 %%--------------------------------------------------------------------
@@ -168,13 +119,14 @@ terminate(_Reason, _StateName, _State) ->
 %% @doc
 %% Convert process state when code is changed
 %%
-%% @spec code_change(OldVsn, StateName, State, Extra) ->
-%%                   {ok, StateName, NewState}
+%% @spec code_change(OldVsn, State, Extra) -> {ok, NewState}
 %% @end
 %%--------------------------------------------------------------------
-code_change(_OldVsn, StateName, State, _Extra) ->
-    {ok, StateName, State}.
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+encode(Req) ->
+    {ok, Req}.
