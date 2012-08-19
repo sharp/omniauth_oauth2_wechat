@@ -23,12 +23,14 @@ with good threading support it still sort of sucks. With welink_media, all you
 need to do to trigger encoding of a video is shoot off an HTTP request, and
 everything else is handled for you.
 
-
-== Using it
-== Encoders and Encoding Tasks
-
-
 == Installation
+
+
+== Component
+
+!https://github.com/SharpX/sharp_media/raw/master/doc/component.png!
+
+
 
 
 == Note on Patches/Pull Requests

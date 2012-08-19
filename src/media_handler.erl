@@ -6,7 +6,7 @@
 %%% @end
 %%% Created :  7 Aug 2012 by sharp <sharp@sharp-Rev-1-0>
 %%%-------------------------------------------------------------------
--module(media_resources).
+-module(media_handler).
 
 -behaviour(gen_fsm).
 
