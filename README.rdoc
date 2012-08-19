@@ -28,9 +28,7 @@ everything else is handled for you.
 
 == Component
 
-!https://github.com/SharpX/sharp_media/raw/master/doc/component.png!
-
-
+!(https://github.com/SharpX/sharp_media/raw/master/doc/com.png)
 
 
 == Note on Patches/Pull Requests

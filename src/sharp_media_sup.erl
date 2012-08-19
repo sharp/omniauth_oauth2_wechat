@@ -25,18 +25,24 @@
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
-start_link([media_resources]) ->
-    supervisor:start_link({local, media_resources_sup}, ?MODULE, [media_resources]).
+start_link([hds]) ->
+    supervisor:start_link({local, media_handler}, ?MODULE, [sharp_hds]);
+start_link([hls]) ->
+	  supervisor:start_link({local, media_handler}, ?MODULE, [sharp_hls]).
+
 
 %% ===================================================================
 %% Supervisor callbacks
 %% ===================================================================
 
-init([media_resources]) ->
-    MediaResource =  ?CHILD(media_resources, worker),
-    {ok, { {simple_one_for_one, 5, 10}, [MediaResource]} };
+init([hds]) ->
+    {ok, { {simple_one_for_one, 5, 10}, [sharp_hds]} };
+
+init([hls]) ->
+		{ok, { {simple_one_for_one, 5, 10}, [sharp_hls]} };
 
 init([]) ->
     MQ = ?CHILD(sharp_media_mq, worker),
-    ENGINE = ?CHILD(sharp_media_engine, worker),
-    {ok, { {one_for_one, 5, 10}, [MQ, ENGINE]} }.
+    MediaHandler =  ?CHILD(media_handler, worker),
+    RequestHandler = ?CHILD(request_handler, worker),
+    {ok, { {one_for_one, 5, 10}, [MQ, RequestHandler]} }.
