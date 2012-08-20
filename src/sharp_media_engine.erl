@@ -8,31 +8,20 @@
 %%%-------------------------------------------------------------------
 -module(sharp_media_engine).
 
--export([start/0, init/1]).
+-export([start_link/0, init/1]).
 
+start_link() ->
+    log4erl:info("Start sharp media engine ..."),
+    start().
 
 start() ->
-    spawn_link(sharp_media_file, init, [self()]).
+    init([self()]).
 
 init(From) ->
     loop(From).
 
 loop(From) ->
-    {ok, HLS} = pooly:idle_count(hls_poor), 
-    {ok, HDS} = pooly:idle_count(hds_pool),
-    if
-	(HLS > 0) and (HDS > 0) ->
-	    {ok, _HdsProcess} = pooly:check_out(),
-	    {ok, _HlsProcess} = pooly:checkout(),
-	    case sharp_mq:get_request() of
-		{ok, Req} ->	
-		    log4erl:info([Req]);
-		{error, Reason} ->
-		    log4erl:error([Reason])
-	    end;
-	true ->
-	    log4erl:warn("No idle process hls:~p hds~p", [HLS, HDS])
-    end,
+    log4erl:info("Get request from MQ"),
     timer:sleep(3000),
     loop(From).
 	

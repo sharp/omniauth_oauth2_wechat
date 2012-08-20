@@ -13,10 +13,10 @@ start() ->
     start(normal, []).
 
 start(_StartType, _StartArgs) ->
-    application:start(pooly),
     application:start(log4erl),
     log4erl:conf("priv/log4erl.conf"),
     application:start(cowboy),
+    log4erl:info("Start sharp_media app ..."),
     Dispatch = [
 		%% {Host, list({Path, Handler, Opts})}
 		{'_', [{'_', http_handler, []}]}
@@ -30,9 +30,8 @@ start(_StartType, _StartArgs) ->
     sharp_media_sup:start_link().
 
 load_config() ->
-    {ok, Config} = file:cosult("sharp_media.conf"),
+    {ok, Config} = file:consult("priv/sharp_media.conf"),
     application:set_env(sharp_media, app_config, Config).
-    
 
 stop(_State) ->
     ok.

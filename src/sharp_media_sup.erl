@@ -23,6 +23,7 @@
 %% ===================================================================
 
 start_link() ->
+    log4erl:info("Start sharp media sup ..."),
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 start_link([media_resources]) ->
@@ -39,4 +40,4 @@ init([media_resources]) ->
 init([]) ->
     MQ = ?CHILD(sharp_media_mq, worker),
     ENGINE = ?CHILD(sharp_media_engine, worker),
-    {ok, { {one_for_one, 5, 10}, [MQ, ENGINE]} }.
+    {ok, { {one_for_one, 5, 10}, [ENGINE, MQ]} }.

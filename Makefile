@@ -6,7 +6,7 @@ all: compile
 
 run:	
 	ERL_LIBS=apps:deps 
-	erl +K true +A 4 -name welink_media@127.0.0.1 -pa ebin -pa deps/*/ebin -pa ../rabbitmq-erlang-client/ebin/ -boot start_clean -s welink_media_app -sasl errlog_type error
+	erl +K true +A 4 -name sharp_media@127.0.0.1 -pa ebin -pa deps/*/ebin  -boot start_clean -s sharp_media_app -sasl errlog_type error
 
 compile:
 	./rebar get-deps
