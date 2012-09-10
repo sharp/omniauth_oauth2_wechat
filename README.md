@@ -1,11 +1,11 @@
-= welink_media
+= sharp_media
 
-welink_media is a RESTful web-based video processor which queues and encodes
+sharp_media is a RESTful web-based video processor which queues and encodes
 videos according to target profiles that you define.  There is a handy web
 interface for defining encoding tasks, and a restful web service which takes
 encoding commands.
 
-welink_media is written using Erlang/OTP.
+sharp_media is written using Erlang/OTP.
 
 == Why would you want one?
 
@@ -23,12 +23,12 @@ with good threading support it still sort of sucks. With welink_media, all you
 need to do to trigger encoding of a video is shoot off an HTTP request, and
 everything else is handled for you.
 
-
-== Using it
-== Encoders and Encoding Tasks
-
-
 == Installation
+
+
+== Component
+
+![arch](/SharpX/sharp_media/raw/master/doc/com.png)
 
 
 == Note on Patches/Pull Requests

@@ -5,7 +5,7 @@
 %%% @end
 %%% Created : 23 Jul 2012 by sharp <sharp@sharp-Rev-1-0>
 
--module(http_handler).
+-module(request_handler).
 -export([init/3, handle/2, terminate/2]).
 
 init({tcp, http}, Req, Opts) ->

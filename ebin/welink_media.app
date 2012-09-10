@@ -1,9 +1,0 @@
-{application,welink_media,
-             [{description,[]},
-              {vsn,"1"},
-              {registered,[]},
-              {applications,[kernel,stdlib]},
-              {mod,{welink_media_app,[]}},
-              {env,[]},
-              {modules,[http_handler,welink_media_app,welink_media_mq,
-                        welink_media_sup]}]}.

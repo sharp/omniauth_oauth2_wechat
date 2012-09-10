@@ -6,7 +6,7 @@
 %%% @end
 %%% Created :  7 Aug 2012 by sharp <sharp@sharp-Rev-1-0>
 %%%-------------------------------------------------------------------
--module(sharp_hls).
+-module(hls_worker).
 
 -behaviour(gen_server).
 

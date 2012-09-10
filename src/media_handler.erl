@@ -4,17 +4,17 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created :  6 Aug 2012 by sharp <sharp@sharp-Rev-1-0>
+%%% Created :  7 Aug 2012 by sharp <sharp@sharp-Rev-1-0>
 %%%-------------------------------------------------------------------
--module(sharp_hds).
+-module(media_handler).
 
 -behaviour(gen_fsm).
 
 %% API
--export([start_link/0]).
+-export([start_link/1]).
 
 %% gen_fsm callbacks
--export([init/1, state_name/2, state_name/3, handle_event/3,
+-export([init/1, ready/2, download/2, encode/2, handle_event/3,
 	 handle_sync_event/4, handle_info/3, terminate/3, code_change/4]).
 
 -define(SERVER, ?MODULE).
@@ -34,8 +34,8 @@
 %% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
 %% @end
 %%--------------------------------------------------------------------
-start_link() ->
-    gen_fsm:start_link({local, ?SERVER}, ?MODULE, [], []).
+start_link(Req) ->
+    gen_fsm:start_link({local, ?MODULE}, ?MODULE, [Req], []).
 
 %%%===================================================================
 %%% gen_fsm callbacks
@@ -55,7 +55,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    {ok, state_name, #state{}}.
+    {ok, ready, #state{}}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -72,8 +72,19 @@ init([]) ->
 %%                   {stop, Reason, NewState}
 %% @end
 %%--------------------------------------------------------------------
-state_name(_Event, State) ->
-    {next_state, state_name, State}.
+ready(download, State) ->
+    {download, state_name, State}.
+
+download(encode, State) ->
+    Reply = ok,
+    {reply, Reply, state_name, State}.
+
+encode(encode, State) ->
+    Reply = ok,
+    {reply, Reply, state_name, State};
+encode(finish, State) ->
+    Reply = ok,
+    {reply, Reply, finish, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -93,9 +104,6 @@ state_name(_Event, State) ->
 %%                   {stop, Reason, Reply, NewState}
 %% @end
 %%--------------------------------------------------------------------
-state_name(_Event, _From, State) ->
-    Reply = ok,
-    {reply, Reply, state_name, State}.
 
 %%--------------------------------------------------------------------
 %% @private
