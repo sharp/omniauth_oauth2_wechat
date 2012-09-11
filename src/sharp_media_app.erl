@@ -19,7 +19,7 @@ start(_StartType, _StartArgs) ->
     log4erl:info("Start sharp_media app ..."),
     Dispatch = [
 		%% {Host, list({Path, Handler, Opts})}
-		{'_', [{'_', http_handler, []}]}
+		{'_', [{'_', request_handler, []}]}
 	       ],
     %% Name, NbAcceptors, Transport, TransOpts, Protocol, ProtoOpts
     cowboy:start_listener(my_http_listener, 100,
