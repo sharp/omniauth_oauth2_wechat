@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'curb'
-c = Curl::Easy.new("http://localhost:8080/medias")
+c = Curl::Easy.new("http://localhost:10000/medias")
 c.multipart_form_post = true
-c.headers["Transfer-Encoding"] = "chunked"
+#c.headers["Transfer-Encoding"] = "chunked"
 c.http_post(Curl::PostField.file('thing[file]', 'video.png'))
-sleep(100)
+sleep(1)

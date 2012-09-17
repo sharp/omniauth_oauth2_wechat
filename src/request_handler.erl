@@ -26,9 +26,8 @@ process('POST', true, Req) ->
     %URL = proplists:get_value(<<"url">>, PostVals),
     %io:format("req info is ~p ~n", [ContentType]),
     {Result, _} = acc_multipart(Req, []),
-    {ok, File} = file:open("test_sharp_media_file", [raw, write]),
-    file:write(File, Result),
-    io:format("error data post ~n"),
+    [{_, Data}] = Result,
+    file:write_file("File.png", Data),
     cowboy_http_req:reply(200, [{<<"Content-Encoding">>, <<"utf-8">>}], "OK", Req);
 
 process('POST', false, Req) ->
@@ -48,10 +47,13 @@ acc_multipart(Req, Acc) ->
 
 acc_multipart(Req, Acc, {headers, Headers}) ->
     acc_multipart(Req, [{Headers, []}|Acc]);
+
 acc_multipart(Req, [{Headers, BodyAcc}|Acc], {body, Data}) ->
     acc_multipart(Req, [{Headers, [Data|BodyAcc]}|Acc]);
+
 acc_multipart(Req, [{Headers, BodyAcc}|Acc], end_of_part) ->
     acc_multipart(Req, [{Headers, list_to_binary(lists:reverse(BodyAcc))}|Acc]);
+
 acc_multipart(Req, Acc, eof) ->
     {lists:reverse(Acc), Req}.
 

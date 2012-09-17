@@ -23,7 +23,7 @@ start(_StartType, _StartArgs) ->
 	       ],
     %% Name, NbAcceptors, Transport, TransOpts, Protocol, ProtoOpts
     cowboy:start_listener(my_http_listener, 100,
-			  cowboy_tcp_transport, [{port, 8080}],
+			  cowboy_tcp_transport, [{port, 10000}],
 			  cowboy_http_protocol, [{dispatch, Dispatch}]
 			 ),
     load_config(),
