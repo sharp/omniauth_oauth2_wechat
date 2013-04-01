@@ -1,4 +1,4 @@
-{application, sharp_media,
+{application, sharp_pusher,
  [
   {description, ""},
   {vsn, "1"},
@@ -7,6 +7,6 @@
                   kernel,
                   stdlib
                  ]},
-  {mod, {sharp_media_app, []}},
+  {mod, { sharp_pusher_app, []}},
   {env, []}
  ]}.
