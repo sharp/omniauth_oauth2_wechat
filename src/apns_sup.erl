@@ -4,8 +4,10 @@
 
 -include("apns.hrl").
 
--export([start_link/0, start_connection/1, start_connection/2]).
+-export([start_link/0]).
 -export([init/1]).
+
+-define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
 
 %% ===================================================================
 %% API functions
@@ -15,26 +17,26 @@
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
-%% @hidden
--spec start_connection(#apns_connection{}) -> {ok, pid()} | {error, term()}.
-start_connection(Connection) ->
-  supervisor:start_child(?MODULE, [Connection]).
-
-%% @hidden
--spec start_connection(atom(), #apns_connection{}) -> {ok, pid()} | {error, term()}.
-start_connection(Name, Connection) ->
-  supervisor:start_child(?MODULE, [Name, Connection]).
-
 %% ===================================================================
 %% Supervisor callbacks
 %% ===================================================================
 %% @hidden
--spec init(_) ->  {ok, {{simple_one_for_one, 5, 10}, [{connection, {apns_connection, start_link, []}, transient, 5000, worker, [apns_connection]}]}}.
+-spec init(_) ->  {ok, {{one_for_one, 5, 10}, [{connection, {apns_server, start_link, []}, transient, 5000, worker, [apns_server]}]}}.
 init(_) ->
+  ConfigFile = "/etc/sharp_pusher.conf",
+  case filelib:is_file(ConfigFile) of 
+    true -> 
+      ApnsConfig = File:consult(ConfigFile);
+    false -> 
+      ApnsConfig = File:consult("priv/sharp_pusher.conf"),
+      io:format("No config file")
+  end
+
+  PoolSpecs = poolboy:child_spec(apns_workers_pool, [{size, 5}, {max_overflow, 10}], ApnsConfig),
+  
   {ok,
-   {{simple_one_for_one, 5, 10},
-    [{connection, {apns_connection, start_link, []},
-      transient, 5000, worker, [apns_connection]}]}}.
+    {{one_for_one, 5, 10}, PoolSpecs}
+  }.
 
 
       
