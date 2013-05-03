@@ -24,7 +24,6 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    io:format("init ~n"),
     ApnsSpec = ?CHILD(apns_sup, supervisor),
     MqttSpec = ?CHILD(mqtt_sup, supervisor),
     {ok, { {one_for_one, 5, 10}, [MqttSpec, ApnsSpec]} }.

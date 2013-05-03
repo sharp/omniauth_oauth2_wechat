@@ -1,20 +1,22 @@
+
+
 ## sharp_pusher(not ready!)
 
-sharp_pusher is a pusher service for iOS and android, which is written by Erlang/OTP.
+[![Build Status](https://travis-ci.org/SharpV/sharp_pusher.png?branch=master)](https://travis-ci.org/SharpV/sharp_pusher)
 
+sharp_pusher is a pusher service for iOS and android, which is written by Erlang/OTP.
 
 
 ## Architecture
 
 
-![arch](/SharpX/sharp_media/raw/master/doc/com.png)
 
 
 ## Installation
 
 openssl pkcs12 -in CertificateName.p12 -out CertificateName.pem -nodes
 
-### Test
+## Test
 
 
 ``` bash

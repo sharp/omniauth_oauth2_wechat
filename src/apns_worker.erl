@@ -18,9 +18,12 @@ start_link(Args) ->
 
 init(Args) ->
     Config = proplists:get_value(development, Args),
+    
+    io:format("~p ~n", [Config]),
+
     ApnsConfig = #apns_config{
-        apple_host = proplists:get_value(apple_host, Config),
-        apple_port = proplists:get_value(apple_port, Config),
+        apple_host = proplists:get_value(apns_host, Config),
+        apple_port = proplists:get_value(apns_port, Config),
         cert_file = proplists:get_value(cert_file, Config)
     },
     io:format("apns worker is starting ~p ~n", [ApnsConfig]),
