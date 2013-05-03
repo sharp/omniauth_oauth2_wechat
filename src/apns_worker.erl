@@ -17,14 +17,14 @@ start_link(Args) ->
     gen_server:start_link(?MODULE, Args, []).
 
 init(Args) ->
-    Config = proplists:get_value(development, Args),
-    
-    io:format("~p ~n", [Config]),
-
+    {_, Args1} = Args,
+    [{_, Arg}] = Args1,
+    Config_Development = proplists:get_value(development, Arg),
+   %% Config_Production  = proplists:get_value(production,  Arg),
     ApnsConfig = #apns_config{
-        apple_host = proplists:get_value(apns_host, Config),
-        apple_port = proplists:get_value(apns_port, Config),
-        cert_file = proplists:get_value(cert_file, Config)
+        apple_host = proplists:get_value(apns_host, Config_Development),
+        apple_port = proplists:get_value(apns_port, Config_Development),
+        cert_file = proplists:get_value(cert_file, proplists:get_value(certificates, Config_Development))
     },
     io:format("apns worker is starting ~p ~n", [ApnsConfig]),
     {ok, SslSocket} = open_connection(ApnsConfig),
