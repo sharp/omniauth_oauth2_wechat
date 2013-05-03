@@ -10,8 +10,8 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    io:format("sharp pusher server has started"),
-    %sharp_pusher_sup:start_link().
+    io:format("sharp pusher server has started ~n"),
+    sharp_pusher_sup:start_link(),
     init_webserver().
 
 init_webserver() ->

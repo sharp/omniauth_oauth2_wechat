@@ -24,7 +24,9 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    ApnsSpec = ?CHILD(mqtt_sup, one_for_one),
-    MqttSpec = ?CHILD(apns_sup, one_for_one),
-    {ok, { {one_for_one, 5, 10}, [ApnsSpec, MqttSpec]} }.
+    io:format("init ~n"),
+    ApnsSpec = ?CHILD(apns_sup, supervisor),
+    MqttSpec = ?CHILD(mqtt_sup, supervisor),
+    {ok, { {one_for_one, 5, 10}, [MqttSpec, ApnsSpec]} }.
+
 

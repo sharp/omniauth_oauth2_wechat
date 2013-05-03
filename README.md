@@ -1,17 +1,18 @@
-### sharp_pusher(not ready!)
+## sharp_pusher(not ready!)
 
 sharp_pusher is a pusher service for iOS and android, which is written by Erlang/OTP.
 
 
 
-### Architecture
+## Architecture
 
 
 ![arch](/SharpX/sharp_media/raw/master/doc/com.png)
 
 
-### Installation
+## Installation
 
+openssl pkcs12 -in CertificateName.p12 -out CertificateName.pem -nodes
 
 ### Test
 
@@ -20,12 +21,12 @@ sharp_pusher is a pusher service for iOS and android, which is written by Erlang
 curl -i -d msg='notification message' http://localhost:8080/apns/#{devise token}
 ```
 
-### Contributors
+## Contributors
 
 
 Sharp
 
-### Copyright
+## Copyright
 
 Copyright (c) 2013 Sharp. See LICENSE for details.
 

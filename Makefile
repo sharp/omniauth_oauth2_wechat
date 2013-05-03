@@ -6,7 +6,7 @@ all: compile
 
 run:	
 	ERL_LIBS=apps:deps 
-	erl +K true +A 4 -name sharp_pusher@127.0.0.1 -pa ebin -pa deps/*/ebin  -boot start_clean -s sharp_pusher -sasl errlog_type error
+	erl +K true +A 4 -name sharp_pusher@127.0.0.1 -pa ebin -pa deps/*/ebin  -boot start_clean -s sharp_pusher -sasl 
 
 compile:
 	./rebar get-deps

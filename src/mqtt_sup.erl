@@ -16,7 +16,8 @@ start_link() ->
 
 
 init([]) ->
-  ok.
+  io:format("start mqtt ... ~n "),
+  ignore.
 
 
       

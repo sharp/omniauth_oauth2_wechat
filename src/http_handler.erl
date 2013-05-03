@@ -30,8 +30,8 @@ process(_, _, Req) ->
 reply(undefined, Req) ->
     cowboy_req:reply(400, [], <<"Missing echo parameter.">>, Req);
 reply(Rep, Req) ->
-  cowboy_req:reply(200,
-    [{<<"content-encoding">>, <<"utf-8">>}], Rep, Req).
+    poolboy:transaction(apns_workers_pool, fun(Worker) -> gen_server:call(Worker, {send, Req}) end),
+    cowboy_req:reply(200, [{<<"content-encoding">>, <<"utf-8">>}], Rep, Req).
 
 terminate(_Reason, _Req, _State) ->
     ok.
