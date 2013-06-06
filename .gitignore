@@ -18,6 +18,6 @@ config/delivers.yml
 *.pid
 *.htm
 *.log
-rel
+rel/sharp_pusher
 *.log
 Gemfile.lock
