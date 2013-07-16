@@ -7,7 +7,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 start_link() ->
-    gen_server:start_link(?MODULE, [], []).
+    gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 init([]) ->
 	case os:getenv("mode") of
@@ -18,6 +18,7 @@ init([]) ->
 			{ok, ConfigFile} = load_config_file("/etc/sharp_pusher.conf"),
 			Config = proplists:get_value(production, ConfigFile)
 		end,
+	io:format("configuration server is starting ~p", [Config]),
     {ok, Config}.
 
 load_config_file(Path) ->
@@ -61,7 +62,7 @@ handle_call({get_cert_file, App}, _From, Config) ->
     Cert = proplists:get_value(App, Certificates),
     {reply, Cert, Config};
 
-handle_call(get_apple_host, _From, Config) ->
+handle_call(get_apns_timeout, _From, Config) ->
     Timeout = proplists:get_value(timeout, Config),
     {reply, Timeout, Config}.
 

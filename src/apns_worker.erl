@@ -14,7 +14,6 @@ start_link(Arg) ->
 
 init(_Arg) ->
     ConnectionsTab = ets:new(ssl_connections, [set]),
-    io:format("apns worker is ready ...... "),
     {ok, {ConnectionsTab}}.
 
 handle_call({notification, App, Msg}, _From, State) ->
