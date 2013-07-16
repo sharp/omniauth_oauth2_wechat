@@ -1,7 +1,7 @@
 -module(apns).
 -author('sharp').
--export([send/2]).
+-export([send/3]).
 
-send(Msg, SslSocket) -> 
-    io:format("message is ~p  ~p ~n", [Msg, SslSocket]).
+send(Connection, App, Msg) -> 
+    io:format("message is ~p ~p ~p ~n", [Msg, Connection, App]).
 

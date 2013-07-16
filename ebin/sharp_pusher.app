@@ -5,6 +5,6 @@
               {applications,[kernel,stdlib]},
               {mod,{sharp_pusher_app,[]}},
               {env,[]},
-              {modules,[apns,apns_feedback,apns_sup,apns_worker,http_handler,
-                        mqtt_sup,sharp_pusher,sharp_pusher_app,
-                        sharp_pusher_sup]}]}.
+              {modules,[apns,apns_feedback,apns_handler,apns_sup,apns_worker,
+                        configuration,sharp_pusher,sharp_pusher_app,
+                        sharp_pusher_sup,tokens_handler]}]}.

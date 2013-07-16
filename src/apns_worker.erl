@@ -5,34 +5,30 @@
 -include("apns.hrl").
 
 -export([start_link/1]).
--export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2,
-         code_change/3]).
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
--record(state, {ssl_socket        :: tuple(),
-                apns_config        :: #apns_config{},
-                in_buffer = <<>>  :: binary(),
-                out_buffer = <<>> :: binary()}).
+%-record(state, {}).
 
-start_link(Args) ->
-    gen_server:start_link(?MODULE, Args, []).
+start_link(Arg) ->
+    gen_server:start_link(?MODULE, Arg, []).
 
-init(Args) ->
-    {_, Args1} = Args,
-    [{_, Arg}] = Args1,
-    Config_Development = proplists:get_value(development, Arg),
-   %% Config_Production  = proplists:get_value(production,  Arg),
-    ApnsConfig = #apns_config{
-        apple_host = proplists:get_value(apns_host, Config_Development),
-        apple_port = proplists:get_value(apns_port, Config_Development),
-        cert_file = proplists:get_value(cert_file, proplists:get_value(certificates, Config_Development))
-    },
-    io:format("apns worker is starting ~p ~n", [ApnsConfig]),
-    {ok, SslSocket} = open_connection(ApnsConfig),
-    {ok, #state{apns_config=ApnsConfig, ssl_socket=SslSocket}}.
+init(_Arg) ->
+    ConnectionsTab = ets:new(ssl_connections, [set]),
+    io:format("apns worker is ready ...... "),
+    {ok, {ConnectionsTab}}.
 
-handle_call({send, Req}, _From, #state{ssl_socket=SslSocket}=State) ->
-    is_open(SslSocket),
-    {reply, apns:send(Req, SslSocket), State};
+handle_call({notification, App, Msg}, _From, State) ->
+    {ConnectionsTab} = State,
+    case ets:lookup(ConnectionsTab, App) of
+        [Connection] -> 
+            apns:send(Connection, App, Msg);
+        _ -> 
+            Connection = open_connection(App),
+            ets:insert(ConnectionsTab, {App, Connection}),
+            apns:send(Connection, App, Msg)
+        end,
+    {reply, ok, State};
+
 handle_call(_Request, _From, State) ->
     {reply, ok, State}.
 
@@ -42,40 +38,25 @@ handle_cast(_Msg, State) ->
 handle_info(_Info, State) ->
     {noreply, State}.
 
-terminate(_Reason, #state{apns_config=Config}) ->
-    ok = pgsql:close(Config),
+terminate(_Reason, _State) ->
     ok.
 
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
 
-is_open(SslSocket) ->
-    case ssl:peername(SslSocket) of 
-        {ok, _} -> "";
-        {error, _} -> open_connection
+open_connection(App) ->
+    SslOpts = [
+        {certfile, filename:absname(configuration:get_cert_file(App))},
+        {mode, binary} 
+    ],
+    case ssl:connect(
+        configuration:get_apns_host(),
+        configuration:get_apns_port(),
+        SslOpts,
+        configuration:get_apns_timeout()
+    ) of
+        {ok, Socket} -> {ok, Socket};
+        {error, Reason} -> {error, Reason}
     end.
-
-open_connection(ApnsConfig) ->
-  KeyFile = case ApnsConfig#apns_config.key_file of
-    undefined -> [];
-    Filename -> [{keyfile, filename:absname(Filename)}]
-  end,
-  SslOpts = [
-    {certfile, filename:absname(ApnsConfig#apns_config.cert_file)},
-    {mode, binary} | KeyFile
-  ],
-  RealSslOpts = case ApnsConfig#apns_config.cert_password of
-    undefined -> SslOpts;
-    Password -> [{password, Password} | SslOpts]
-  end,
-  case ssl:connect(
-    ApnsConfig#apns_config.apple_host,
-    ApnsConfig#apns_config.apple_port,
-    RealSslOpts,
-    ApnsConfig#apns_config.timeout
-  ) of
-    {ok, Socket} -> {ok, Socket};
-    {error, Reason} -> {error, Reason}
-  end.
 
 

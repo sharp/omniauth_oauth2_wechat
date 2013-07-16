@@ -17,7 +17,8 @@ start(_StartType, _StartArgs) ->
 init_webserver() ->
     Dispatch = cowboy_router:compile([
         %% {URIHost, list({URIPath, Handler, Opts})}
-        {'_', [{"/apns/:token", http_handler, []}]}
+        {'_', [{"/apns/:app", apns_handler, []}]},
+        {'_', [{"/tokens/:token", tokens_handler, []}]}
     ]),
     %% Name, NbAcceptors, TransOpts, ProtoOpts
     cowboy:start_http(sharp_http_listener, 100, [{port, 8080}], [{env, [{dispatch, Dispatch}]}]

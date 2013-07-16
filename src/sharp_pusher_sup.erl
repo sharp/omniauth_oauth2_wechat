@@ -1,4 +1,3 @@
-
 -module(sharp_pusher_sup).
 
 -behaviour(supervisor).
@@ -25,7 +24,7 @@ start_link() ->
 
 init([]) ->
     ApnsSpec = ?CHILD(apns_sup, supervisor),
-    MqttSpec = ?CHILD(mqtt_sup, supervisor),
-    {ok, { {one_for_one, 5, 10}, [MqttSpec, ApnsSpec]} }.
+    ConfigSpec = ?CHILD(configuration, worker),
+    {ok, { {one_for_one, 5, 10}, [ApnsSpec, ConfigSpec]} }.
 
 

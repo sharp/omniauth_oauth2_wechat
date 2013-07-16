@@ -1,6 +1,6 @@
 
 
-## sharp_pusher(not ready!)
+## sharp_pusher
 
 [![Build Status](https://travis-ci.org/SharpV/sharp_pusher.png?branch=master)](https://travis-ci.org/SharpV/sharp_pusher)
 
@@ -20,7 +20,7 @@ openssl pkcs12 -in CertificateName.p12 -out CertificateName.pem -nodes
 
 
 ``` bash
-curl -i -d msg='notification message' http://localhost:8080/apns/#{devise token}
+curl -i -d msg='notification message' http://localhost:8080/apns/#{app_id}
 ```
 
 ## Contributors
