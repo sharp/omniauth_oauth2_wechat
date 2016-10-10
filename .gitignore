@@ -2,7 +2,7 @@
 deps/*
 apps/*
 *~
-*.beam
+*.gem
 *.log*
 */tmp/
 *.swp

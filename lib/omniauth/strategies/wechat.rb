@@ -29,7 +29,7 @@ module OmniAuth
           country:    raw_info['country'],
           unionid:    raw_info['unionid'],
           headimgurl: raw_info['headimgurl'],
-          unionid: raw_info['unionid']
+          subscribe: raw_info['subscribe']
         }
       end
 
